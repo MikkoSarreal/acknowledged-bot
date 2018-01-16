@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import redis
 import os
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, ReplyKeyboardMarkup
 from telegram.ext import Updater, CommandHandler, CallbackQueryHandler
@@ -14,10 +13,6 @@ logger = logging.getLogger(__name__)
 token = os.environ['TELEGRAM_TOKEN']
 #             ...
 
-# If you use redis, install this add-on https://elements.heroku.com/addons/heroku-redis
-r = redis.from_url(os.environ.get("REDIS_URL"))
-
-
 def new(bot, update):
 
     
@@ -25,7 +20,7 @@ def new(bot, update):
 
     reply_markup = InlineKeyboardMarkup(keyboard)
 
-    update.message.reply_text(update.message.text[4:] + '\n\nAcknowledged:\n', reply_markup=reply_markup)
+    update.message.reply_text("\n" + update.message.text.split(" ", 1)[1] + '\n\nAcknowledged:\n', reply_markup=reply_markup)
     
 
 def button(bot, update):
@@ -38,10 +33,10 @@ def button(bot, update):
         new_text = query.message.text + ' '
     else:
         new_text =  query.message.text + '\n' + new_name
+        ackd_markup = InlineKeyboardMarkup([[InlineKeyboardButton("Acknowledge", callback_data="2")]])
+        bot.edit_message_text(reply_markup= ackd_markup , chat_id=query.message.chat_id, message_id=query.message.message_id, text = new_text)
 
-    ackd_markup = InlineKeyboardMarkup([[InlineKeyboardButton("Acknowledge", callback_data="2")]])
-    
-    bot.edit_message_text(reply_markup= ackd_markup , chat_id=query.message.chat_id, message_id=query.message.message_id, text = new_text)
+ 
 
     
     
@@ -54,7 +49,7 @@ def error(bot, update, error):
 def main():
     updater = Updater(token=token)
 
-    updater.dispatcher.add_handler(CommandHandler('new', new))
+    updater.dispatcher.add_handler(CommandHandler('ack', new))
     updater.dispatcher.add_handler(CallbackQueryHandler(button))
     updater.dispatcher.add_error_handler(error)
 
@@ -67,3 +62,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+
