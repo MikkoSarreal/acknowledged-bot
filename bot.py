@@ -14,6 +14,10 @@ logger = logging.getLogger(__name__)
 token = os.environ['TELEGRAM_TOKEN']
 #             ...
 
+def start(bot, update):
+    update.message.reply_text("Hello! I'm AcknowledgedBot.\n\nTo make announcements, add me to a group(@AcknowledgedBot) and type \"/ack [your announcement here].\"\n\nIf you find any bugs or suggestions, please message @ackbotsupport.") 
+
+
 def new(bot, update):
 
     
@@ -21,7 +25,12 @@ def new(bot, update):
 
     reply_markup = InlineKeyboardMarkup(keyboard)
 
-    update.message.reply_text("\n" + update.message.text.split(" ", 1)[1] + '\n\nAcknowledged:\n', reply_markup=reply_markup)
+    if ' ' not in update.message.text:
+        return
+
+    announcement = update.message.text.split(" ", 1)[1]
+
+    update.message.reply_text("\n" + announcement  + '\n\nAcknowledged:\n', reply_markup=reply_markup)
     
 
 def button(bot, update):
@@ -32,6 +41,7 @@ def button(bot, update):
     firstname = user['first_name']
     lastname = user['last_name']
     localtime = time.strftime('%m/%d/%y %I:%M%p')
+    print(query.message.text)
 
     if firstname is None:
         name = lastname
@@ -77,6 +87,8 @@ def main():
     updater = Updater(token=token)
 
     updater.dispatcher.add_handler(CommandHandler('ack', new))
+    updater.dispatcher.add_handler(CommandHandler('start', start))
+    updater.dispatcher.add_handler(CommandHandler('new', start))
     updater.dispatcher.add_handler(CallbackQueryHandler(button))
     updater.dispatcher.add_error_handler(error)
 
