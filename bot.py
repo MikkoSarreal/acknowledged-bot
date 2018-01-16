@@ -32,7 +32,6 @@ def button(bot, update):
     firstname = user['first_name']
     lastname = user['last_name']
     localtime = time.strftime('%m/%d/%y %I:%M%p')
-    print(query.message.text)
 
     if firstname is None:
         name = lastname
