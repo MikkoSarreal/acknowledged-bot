@@ -1,4 +1,2 @@
 # List of required packages (Dependencies)
-redis
-telebot
 telegram
