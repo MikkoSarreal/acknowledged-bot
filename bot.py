@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
-import os
+import os, time
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, ReplyKeyboardMarkup
 from telegram.ext import Updater, CommandHandler, CallbackQueryHandler
+
 
 
 import logging
@@ -26,19 +27,46 @@ def new(bot, update):
 def button(bot, update):
     query = update.callback_query
 
-    
-    new_name = '-'+query.from_user['first_name']+' '+query.from_user['last_name']
+    user = query.from_user
 
-    if new_name in query.message.text:
+    firstname = user['first_name']
+    lastname = user['last_name']
+    localtime = time.strftime('%m/%d/%y %I:%M%p')
+    print(query.message.text)
+
+    if firstname is None:
+        name = lastname
+    elif lastname is None:
+        name = firstname
+    else:
+        name= firstname + ' ' + lastname
+
+    new_name = '-' + name
+    
+
+    if new_name in query.message.text or (' ' + new_name) in query.message.text:
         new_text = query.message.text + ' '
     else:
         new_text =  query.message.text + '\n' + new_name
         ackd_markup = InlineKeyboardMarkup([[InlineKeyboardButton("Acknowledge", callback_data="2")]])
         bot.edit_message_text(reply_markup= ackd_markup , chat_id=query.message.chat_id, message_id=query.message.message_id, text = new_text)
-
  
+'''def inlinequery(bot, update):
+    """Handle the inline query."""
+    query = update.inline_query.query
+    keyboard = [[InlineKeyboardButton("Acknowledge", callback_data="1")]]
 
+    reply_markup = InlineKeyboardMarkup(keyboard)
     
+    results = [
+        InlineQueryResultArticle(
+            id=uuid4(),
+            title="New Announcement (type your message then click this)",
+            input_message_content=InputTextMessageContent(query)
+            )]
+    
+    update.inline_query.answer(results)
+    update.reply_text(update.message['message_id'],"test",reply_markup=reply_markup)'''
     
 def error(bot, update, error):
     """Log Errors caused by Updates."""
@@ -52,8 +80,6 @@ def main():
     updater.dispatcher.add_handler(CommandHandler('ack', new))
     updater.dispatcher.add_handler(CallbackQueryHandler(button))
     updater.dispatcher.add_error_handler(error)
-
-
 
     updater.start_polling()
 
