@@ -19,29 +19,19 @@ def start(bot, update):
 
 
 def new(bot, update):
-
-    
     keyboard = [[InlineKeyboardButton("Acknowledge", callback_data="1")]]
-
     reply_markup = InlineKeyboardMarkup(keyboard)
-
     if ' ' not in update.message.text:
         return
-
     announcement = update.message.text.split(" ", 1)[1]
-
-    update.message.reply_text("\n" + announcement  + '\n\nAcknowledged:\n', reply_markup=reply_markup)
+    print(update.message.from_user['first_name'] + ' ' +  update.message.from_user['last_name'] if update.message.from_user['last_name'] else '' + '\n' + update.message.text)
+    update.message.reply_text("\n" + announcement  + '\n\n---------------\nAcknowledged:\n', reply_markup=reply_markup)
     
-
 def button(bot, update):
     query = update.callback_query
-
     user = query.from_user
-
     firstname = user['first_name']
     lastname = user['last_name']
-    localtime = time.strftime('%m/%d/%y %I:%M%p')
-    print(query.message.text)
 
     if firstname is None:
         name = lastname
@@ -50,8 +40,8 @@ def button(bot, update):
     else:
         name= firstname + ' ' + lastname
 
-    new_name = '-' + name
-    
+    new_name = '- ' + name
+
 
     if new_name in query.message.text or (' ' + new_name) in query.message.text:
         new_text = query.message.text + ' '
@@ -79,9 +69,7 @@ def button(bot, update):
     
 def error(bot, update, error):
     """Log Errors caused by Updates."""
-    logger.warning('Update "%s" caused error "%s"', update, error)
-
-
+    print(error)
 
 def main():
     updater = Updater(token=token)
@@ -99,4 +87,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
