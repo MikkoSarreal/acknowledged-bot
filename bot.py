@@ -24,7 +24,8 @@ def new(bot, update):
     if ' ' not in update.message.text:
         return
     announcement = update.message.text.split(" ", 1)[1]
-    print('fr ' +update.message.from_user['first_name'] + ' ' +  update.message.from_user['last_name'] if update.message.from_user['last_name'] else '' + '\n' + announcement)
+    print('fr ' +update.message.from_user['first_name'] + ' ' +  update.message.from_user['last_name'] if update.message.from_user['last_name'] else '' + '\n')
+    print('ms ' + announcement)
     update.message.reply_text("\n" + announcement  + '\n\n---------------\nAcknowledged:\n', reply_markup=reply_markup)
     
 def button(bot, update):
@@ -47,7 +48,7 @@ def button(bot, update):
         new_text = query.message.text + ' '
     else:
         new_text =  query.message.text + '\n' + new_name
-        print(new_text)
+        print('ac ' + new_text[0:10] + ' | ' + new_name)
         ackd_markup = InlineKeyboardMarkup([[InlineKeyboardButton("Acknowledge", callback_data="2")]])
         bot.edit_message_text(reply_markup= ackd_markup , chat_id=query.message.chat_id, message_id=query.message.message_id, text = new_text)
  
