@@ -71,7 +71,6 @@ def button(bot, update):
     
 def error(bot, update, error):
     """Log Errors caused by Updates."""
-    print(error)
 
 def main():
     updater = Updater(token=token)
