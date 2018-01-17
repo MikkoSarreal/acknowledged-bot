@@ -48,7 +48,7 @@ def button(bot, update):
         new_text = query.message.text + ' '
     else:
         new_text =  query.message.text + '\n' + new_name
-        print('ac ' + new_text[0:10] + ' | ' + new_name)
+        print('ac ' + query.message.text[0:7] + ' | ' + new_name)
         ackd_markup = InlineKeyboardMarkup([[InlineKeyboardButton("Acknowledge", callback_data="2")]])
         bot.edit_message_text(reply_markup= ackd_markup , chat_id=query.message.chat_id, message_id=query.message.message_id, text = new_text)
  
