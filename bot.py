@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import os, time
-from telegram import InlineKeyboardButton, InlineKeyboardMarkup, ReplyKeyboardMarkup
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup, ReplyKeyboardMarkup, ParseMode
 from telegram.ext import Updater, CommandHandler, CallbackQueryHandler
 
 
@@ -23,10 +23,10 @@ def new(bot, update):
     reply_markup = InlineKeyboardMarkup(keyboard)
     if ' ' not in update.message.text:
         return
-    announcement = update.message.text.split(" ", 1)[1]
+    announcement = update.message.text_markdown.split(" ", 1)[1]
     print('fr ' +update.message.from_user['first_name'] + ' ' +  update.message.from_user['last_name'] if update.message.from_user['last_name'] else '' + '\n')
     print('ms ' + announcement)
-    update.message.reply_text("\n" + announcement  + '\n\n---------------\nAcknowledged:\n', reply_markup=reply_markup)
+    update.message.reply_text("\n" + announcement  + '\n\n---------------\nAcknowledged:\n', reply_markup=reply_markup, parse_mode= ParseMode.MARKDOWN)
     
 def button(bot, update):
     query = update.callback_query
